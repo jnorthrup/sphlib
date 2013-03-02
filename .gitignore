@@ -1,0 +1,16 @@
+*.~
+*.~[0-9]
+*.[0-9]~
+*.bak
+*.swp
+*.iml
+*.ipr
+*.iws
+.classpath
+.idea
+.project
+.settings
+out
+target
+test-classes
+war
