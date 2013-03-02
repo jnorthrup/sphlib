@@ -79,15 +79,15 @@ abstract class MDHelper extends DigestEngine {
 		this.fbyte = fbyte;
 	}
 
-	private boolean littleEndian;
-	private byte[] countBuf;
-	private byte fbyte;
+	  boolean littleEndian;
+	  byte[] countBuf;
+	  byte fbyte;
 
 	/**
 	 * Compute the padding. The padding data is input into the engine,
 	 * which is flushed.
 	 */
-	protected void makeMDPadding()
+	void makeMDPadding()
 	{
 		int dataLen = flush();
 		int blen = getBlockLength();
@@ -95,13 +95,13 @@ abstract class MDHelper extends DigestEngine {
 		currentLength = (currentLength + (long)dataLen) * 8L;
 		int lenlen = countBuf.length;
 		if (littleEndian) {
-			encodeLEInt((int)currentLength, countBuf, 0);
-			encodeLEInt((int)(currentLength >>> 32), countBuf, 4);
+			encodeLEInt((int)currentLength, 0, countBuf);
+			encodeLEInt((int)(currentLength >>> 32), 4, countBuf);
 		} else {
 			encodeBEInt((int)(currentLength >>> 32),
-				countBuf, lenlen - 8);
+                    lenlen - 8, countBuf);
 			encodeBEInt((int)currentLength,
-				countBuf, lenlen - 4);
+                    lenlen - 4, countBuf);
 		}
 		int endLen = (dataLen + lenlen + blen) & ~(blen - 1);
 		update(fbyte);
@@ -123,13 +123,13 @@ abstract class MDHelper extends DigestEngine {
 	 * {@code buf} at offset {@code off}, in little-endian
 	 * convention (least significant byte first).
 	 *
-	 * @param val   the value to encode
-	 * @param buf   the destination buffer
-	 * @param off   the destination offset
-	 */
-	private static final void encodeLEInt(int val, byte[] buf, int off)
+     * @param val   the value to encode
+     * @param off   the destination offset
+     * @param buf   the destination buffer
+     */
+	private static void encodeLEInt(int val, int off, byte... buf)
 	{
-		buf[off + 0] = (byte)val;
+		buf[off] = (byte)val;
 		buf[off + 1] = (byte)(val >>> 8);
 		buf[off + 2] = (byte)(val >>> 16);
 		buf[off + 3] = (byte)(val >>> 24);
@@ -140,13 +140,13 @@ abstract class MDHelper extends DigestEngine {
 	 * {@code buf} at offset {@code off}, in big-endian
 	 * convention (most significant byte first).
 	 *
-	 * @param val   the value to encode
-	 * @param buf   the destination buffer
-	 * @param off   the destination offset
-	 */
-	private static final void encodeBEInt(int val, byte[] buf, int off)
+     * @param val   the value to encode
+     * @param off   the destination offset
+     * @param buf   the destination buffer
+     */
+	private static void encodeBEInt(int val, int off, byte... buf)
 	{
-		buf[off + 0] = (byte)(val >>> 24);
+		buf[off] = (byte)(val >>> 24);
 		buf[off + 1] = (byte)(val >>> 16);
 		buf[off + 2] = (byte)(val >>> 8);
 		buf[off + 3] = (byte)val;

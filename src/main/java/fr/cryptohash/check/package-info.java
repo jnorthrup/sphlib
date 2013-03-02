@@ -1,10 +1,19 @@
-// $Id: BMW256.java 166 2010-05-03 16:44:36Z tp $
-
-package fr.cryptohash;
+// $Id: package-info.java 157 2010-04-26 19:03:44Z tp $
 
 /**
- * <p>This class implements the BMW-256 ("Blue Midnight Wish") digest
- * algorithm under the {@link Digest} API.</p>
+ * <p>The {@code fr.cryptohash.check} package contains some check code
+ * which can be used to verify that the hash function implementations
+ * run correctly, and to measure their speed.</p>
+ *
+ * <p>There are two classes in this package. Each of them is a program
+ * entry point (each contains a proper {@code main()} static method).
+ * The {@link fr.cryptohash.check.ValidateDigests ValidateDigests} class runs
+ * self-tests with hardcoded check vectors; it ignores its arguments. The
+ * {@link fr.cryptohash.check.Speed Speed} class benchmarks the hash
+ * function implementations for processing speed, over various message
+ * lengths; the names of the functions to hash are given as argument. If
+ * no argument is given then all implemented functions are benchmarked
+ * (which takes a few minutes).</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,43 +42,8 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 166 $
+ * @version   $Revision: 157 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class BMW256 extends BMWSmallCore {
-
-	/**
-	 * Create the engine.
-	 */
-	public BMW256()
-	{
-		super();
-	}
-
-	/** The initial value for BMW-256. */
-	private static final int[] initVal = {
-		0x40414243, 0x44454647, 0x48494A4B, 0x4C4D4E4F,
-		0x50515253, 0x54555657, 0x58595A5B, 0x5C5D5E5F,
-		0x60616263, 0x64656667, 0x68696A6B, 0x6C6D6E6F,
-		0x70717273, 0x74757677, 0x78797A7B, 0x7C7D7E7F
-	};
-
-	/** @see BMWSmallCore */
-	int[] getInitVal()
-	{
-		return initVal;
-	}
-
-	/** @see Digest */
-	public int getDigestLength()
-	{
-		return 32;
-	}
-
-	/** @see Digest */
-	public Digest copy()
-	{
-		return copyState(new BMW256());
-	}
-}
+package fr.cryptohash.check;

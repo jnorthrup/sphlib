@@ -451,8 +451,8 @@ located in the "fr.cryptohash" package; there is one specific class for
 each hash function, a common interface called "Digest", and some
 non-public helper classes.
 
-The "fr.cryptohash.test" package contains two standalone applications
-(classes with a main() method). The "TestDigest" application runs the
+The "fr.cryptohash.check" package contains two standalone applications
+(classes with a main() method). The "ValidateDigests" application runs the
 unit tests. The "Speed" application runs speed tests, with an output
 similar to that provided by the "sphspeed" tool from the C code. Note
 that these tests cannot access the CPU usage by the test process;
@@ -468,7 +468,7 @@ The Java code should be compatible both with older virtual machines
 It appears that some versions of the Java virtual machine from Sun (now
 Oracle) have a bug, in which the code for ECHO is not properly handled
 at runtime. To check whether your VM has the bug, run the
-fr.cryptohash.test.TestDigest application, preferably with the '-server'
+fr.cryptohash.check.ValidateDigests application, preferably with the '-server'
 command-line flag (this is the default on x86_64 but not on i386).
 
 Affected versions include at least 1.6.0_16. However, 1.6.0_19 and

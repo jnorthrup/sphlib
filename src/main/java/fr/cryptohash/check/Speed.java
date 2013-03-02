@@ -1,6 +1,6 @@
 // $Id: Speed.java 229 2010-06-16 20:22:27Z tp $
 
-package fr.cryptohash.test;
+package fr.cryptohash.check;
 
 import fr.cryptohash.Digest;
 
@@ -57,40 +57,40 @@ public class Speed {
 	 */
 
 	private static final String[] FUNS = {
-		"haval3",        "HAVAL256_3",
-		"haval4",        "HAVAL256_4",
-		"haval5",        "HAVAL256_5",
-		"md2",           "MD2",
-		"md4",           "MD4",
-		"md5",           "MD5",
-		"panama",        "PANAMA",
-		"radiogatun32",  "RadioGatun32",
-		"radiogatun64",  "RadioGatun64",
-		"ripemd",        "RIPEMD",
-		"ripemd128",     "RIPEMD128",
-		"ripemd160",     "RIPEMD160",
-		"sha0",          "SHA0",
-		"sha1",          "SHA1",
-		"sha",           "SHA,256,512",
-		"tiger",         "Tiger",
-		"whirlpool",     "Whirlpool"
+//		"haval3",        "HAVAL256_3",
+//		"haval4",        "HAVAL256_4",
+//		"haval5",        "HAVAL256_5",
+//		"md2",           "MD2",
+//		"md4",           "MD4",
+//		"md5",           "MD5",
+//		"panama",        "PANAMA",
+//		"radiogatun32",  "RadioGatun32",
+//		"radiogatun64",  "RadioGatun64",
+//		"ripemd",        "RIPEMD",
+//		"ripemd128",     "RIPEMD128",
+//		"ripemd160",     "RIPEMD160",
+//		"sha0",          "SHA0",
+//		"sha1",          "SHA1",
+		"sha",           "SHA256",
+//		"tiger",         "Tiger",
+//		"whirlpool",     "Whirlpool"
 	};
 
 	private static final String[] FUNS_SHA3 = {
-		"blake",      "BLAKE,256,512",
-		"bmw",        "BMW,256,512",
-		"cubehash",   "CubeHash,512",
-		"echo",       "ECHO,256,512",
-		"fugue",      "Fugue,256,384,512",
-		"groestl",    "Groestl,256,512",
-		"hamsi",      "Hamsi,256,512",
-		"jh",         "JH,512",
-		"keccak",     "Keccak,224,256,384,512",
-		"luffa",      "Luffa,256,384,512",
-		"shabal",     "Shabal,512",
-		"shavite",    "SHAvite,256,512",
-		"simd",       "SIMD,256,512",
-		"skein",      "Skein,256,512"
+//		"blake",      "BLAKE,256,512",
+//		"bmw",        "BMW,256,512",
+//		"cubehash",   "CubeHash,512",
+//		"echo",       "ECHO,256,512",
+//		"fugue",      "Fugue,256,384,512",
+//		"groestl",    "Groestl,256,512",
+//		"hamsi",      "Hamsi,256,512",
+//		"jh",         "JH,512",
+//		"keccak",     "Keccak,224,256,384,512",
+//		"luffa",      "Luffa,256,384,512",
+//		"shabal",     "Shabal,512",
+//		"shavite",    "SHAvite,256,512",
+//		"simd",       "SIMD,256,512",
+//		"skein",      "Skein,256,512"
 	};
 
 	private static final Hashtable NAME_TO_CLASSNAMES = new Hashtable();
@@ -234,7 +234,7 @@ public class Speed {
 
 	private static void speed(String name, Digest dig)
 	{
-		System.out.println("Speed test: " + name);
+		System.out.println("Speed check: " + name);
 		byte[] buf = new byte[8192];
 		for (int i = 0; i < buf.length; i ++)
 			buf[i] = 'a';
@@ -298,8 +298,8 @@ public class Speed {
 		int dlen = dig.getDigestLength();
 		long orig = System.currentTimeMillis();
 		while (num -- > 0) {
-			dig.update(buf, 0, len);
-			dig.digest(buf, j, dlen);
+			dig.update(0, len, buf);
+			dig.digest(j, dlen, buf);
 			if ((j += dlen) > (buf.length - dlen))
 				j = 0;
 		}
@@ -312,10 +312,10 @@ public class Speed {
 		byte[] out = new byte[dig.getDigestLength()];
 		long orig = System.currentTimeMillis();
 		while (num -- > 0) {
-			dig.update(buf, 0, len);
+			dig.update(0, len, buf);
 		}
 		long end = System.currentTimeMillis();
-		dig.digest(out, 0, out.length);
+		dig.digest(0, out.length, out);
 		return end - orig;
 	}
 

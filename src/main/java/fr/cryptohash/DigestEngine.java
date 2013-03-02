@@ -52,14 +52,14 @@ public abstract class DigestEngine implements Digest {
 	/**
 	 * Reset the hash algorithm state.
 	 */
-	protected abstract void engineReset();
+	abstract void engineReset();
 
 	/**
 	 * Process one block of data.
 	 *
 	 * @param data   the data block
 	 */
-	protected abstract void processBlock(byte[] data);
+	abstract void processBlock(byte[] data);
 
 	/**
 	 * Perform the final padding and store the result in the
@@ -67,10 +67,10 @@ public abstract class DigestEngine implements Digest {
 	 * and then {@link #update} with the appropriate padding
 	 * data in order to get the full input data.
 	 *
-	 * @param buf   the output buffer
-	 * @param off   the output offset
-	 */
-	protected abstract void doPadding(byte[] buf, int off);
+     * @param off   the output offset
+     * @param buf   the output buffer
+     */
+	abstract void doPadding(int off, byte[] buf);
 
 	/**
 	 * This function is called at object creation time; the
@@ -79,7 +79,7 @@ public abstract class DigestEngine implements Digest {
 	 * to process data or meaningfully honour calls such as
 	 * {@link #getDigestLength}</code>.
 	 */
-	protected abstract void doInit();
+	abstract void doInit();
 
 	private int digestLen, blockLen, inputLen;
 	private byte[] inputBuf, outputBuf;
@@ -112,27 +112,27 @@ public abstract class DigestEngine implements Digest {
 	{
 		adjustDigestLen();
 		byte[] result = new byte[digestLen];
-		digest(result, 0, digestLen);
+		digest(0, digestLen, result);
 		return result;
 	}
 
 	/** @see Digest */
 	public byte[] digest(byte[] input)
 	{
-		update(input, 0, input.length);
+		update(0, input.length, input);
 		return digest();
 	}
 
 	/** @see Digest */
-	public int digest(byte[] buf, int offset, int len)
+	public int digest(int offset, int len, byte[] buf)
 	{
 		adjustDigestLen();
 		if (len >= digestLen) {
-			doPadding(buf, offset);
+			doPadding(offset, buf);
 			reset();
 			return digestLen;
 		} else {
-			doPadding(outputBuf, 0);
+			doPadding(0, outputBuf);
 			System.arraycopy(outputBuf, 0, buf, offset, len);
 			reset();
 			return len;
@@ -161,11 +161,11 @@ public abstract class DigestEngine implements Digest {
 	/** @see Digest */
 	public void update(byte[] input)
 	{
-		update(input, 0, input.length);
+		update(0, input.length, input);
 	}
 
 	/** @see Digest */
-	public void update(byte[] input, int offset, int len)
+	public void update(int offset, int len, byte[] input)
 	{
 		while (len > 0) {
 			int copyLen = blockLen - inputLen;
@@ -195,7 +195,7 @@ public abstract class DigestEngine implements Digest {
 	 *
 	 * @return  the internal block length (in bytes)
 	 */
-	protected int getInternalBlockLength()
+	int getInternalBlockLength()
 	{
 		return getBlockLength();
 	}
@@ -206,7 +206,7 @@ public abstract class DigestEngine implements Digest {
 	 *
 	 * @return  the number of bytes still unprocessed after the flush
 	 */
-	protected final int flush()
+	int flush()
 	{
 		return inputLen;
 	}
@@ -223,7 +223,7 @@ public abstract class DigestEngine implements Digest {
 	 *
 	 * @return  a block-sized internal buffer
 	 */
-	protected final byte[] getBlockBuffer()
+	byte[] getBlockBuffer()
 	{
 		return inputBuf;
 	}
@@ -236,7 +236,7 @@ public abstract class DigestEngine implements Digest {
 	 *
 	 * @return  the block count
 	 */
-	protected long getBlockCount()
+	long getBlockCount()
 	{
 		return blockCount;
 	}
@@ -251,7 +251,7 @@ public abstract class DigestEngine implements Digest {
 	 * @param dest   the copy
 	 * @return  the value {@code dest}
 	 */
-	protected Digest copyState(DigestEngine dest)
+	Digest copyState(DigestEngine dest)
 	{
 		dest.inputLen = inputLen;
 		dest.blockCount = blockCount;

@@ -1,101 +1,8 @@
-// $Id: TestDigest.java 257 2011-07-15 20:57:08Z tp $
+// $Id: ValidateDigests.java 257 2011-07-15 20:57:08Z tp $
 
-package fr.cryptohash.test;
+package fr.cryptohash.check;
 
-import fr.cryptohash.Digest;
-import fr.cryptohash.MD2;
-import fr.cryptohash.MD4;
-import fr.cryptohash.MD5;
-import fr.cryptohash.SHA0;
-import fr.cryptohash.SHA1;
-import fr.cryptohash.SHA224;
-import fr.cryptohash.SHA256;
-import fr.cryptohash.SHA384;
-import fr.cryptohash.SHA512;
-import fr.cryptohash.RIPEMD;
-import fr.cryptohash.RIPEMD128;
-import fr.cryptohash.RIPEMD160;
-import fr.cryptohash.Tiger;
-import fr.cryptohash.Tiger2;
-import fr.cryptohash.PANAMA;
-import fr.cryptohash.HAVAL128_3;
-import fr.cryptohash.HAVAL128_4;
-import fr.cryptohash.HAVAL128_5;
-import fr.cryptohash.HAVAL160_3;
-import fr.cryptohash.HAVAL160_4;
-import fr.cryptohash.HAVAL160_5;
-import fr.cryptohash.HAVAL192_3;
-import fr.cryptohash.HAVAL192_4;
-import fr.cryptohash.HAVAL192_5;
-import fr.cryptohash.HAVAL224_3;
-import fr.cryptohash.HAVAL224_4;
-import fr.cryptohash.HAVAL224_5;
-import fr.cryptohash.HAVAL256_3;
-import fr.cryptohash.HAVAL256_4;
-import fr.cryptohash.HAVAL256_5;
-import fr.cryptohash.Whirlpool;
-import fr.cryptohash.Whirlpool0;
-import fr.cryptohash.Whirlpool1;
-import fr.cryptohash.RadioGatun32;
-import fr.cryptohash.RadioGatun64;
-import fr.cryptohash.Shabal192;
-import fr.cryptohash.Shabal224;
-import fr.cryptohash.Shabal256;
-import fr.cryptohash.Shabal384;
-import fr.cryptohash.Shabal512;
-import fr.cryptohash.BLAKE224;
-import fr.cryptohash.BLAKE256;
-import fr.cryptohash.BLAKE384;
-import fr.cryptohash.BLAKE512;
-import fr.cryptohash.Luffa224;
-import fr.cryptohash.Luffa256;
-import fr.cryptohash.Luffa384;
-import fr.cryptohash.Luffa512;
-import fr.cryptohash.ECHO224;
-import fr.cryptohash.ECHO256;
-import fr.cryptohash.ECHO384;
-import fr.cryptohash.ECHO512;
-import fr.cryptohash.SIMD224;
-import fr.cryptohash.SIMD256;
-import fr.cryptohash.SIMD384;
-import fr.cryptohash.SIMD512;
-import fr.cryptohash.Skein224;
-import fr.cryptohash.Skein256;
-import fr.cryptohash.Skein384;
-import fr.cryptohash.Skein512;
-import fr.cryptohash.JH224;
-import fr.cryptohash.JH256;
-import fr.cryptohash.JH384;
-import fr.cryptohash.JH512;
-import fr.cryptohash.Fugue224;
-import fr.cryptohash.Fugue256;
-import fr.cryptohash.Fugue384;
-import fr.cryptohash.Fugue512;
-import fr.cryptohash.BMW224;
-import fr.cryptohash.BMW256;
-import fr.cryptohash.BMW384;
-import fr.cryptohash.BMW512;
-import fr.cryptohash.CubeHash224;
-import fr.cryptohash.CubeHash256;
-import fr.cryptohash.CubeHash384;
-import fr.cryptohash.CubeHash512;
-import fr.cryptohash.Keccak224;
-import fr.cryptohash.Keccak256;
-import fr.cryptohash.Keccak384;
-import fr.cryptohash.Keccak512;
-import fr.cryptohash.Groestl224;
-import fr.cryptohash.Groestl256;
-import fr.cryptohash.Groestl384;
-import fr.cryptohash.Groestl512;
-import fr.cryptohash.Hamsi224;
-import fr.cryptohash.Hamsi256;
-import fr.cryptohash.Hamsi384;
-import fr.cryptohash.Hamsi512;
-import fr.cryptohash.SHAvite224;
-import fr.cryptohash.SHAvite256;
-import fr.cryptohash.SHAvite384;
-import fr.cryptohash.SHAvite512;
-import fr.cryptohash.HMAC;
+import fr.cryptohash.*;
 
 /**
  * This class is a program entry point; it includes tests for the
@@ -132,7 +39,7 @@ import fr.cryptohash.HMAC;
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class TestDigest {
+public class ValidateDigests {
 
 	/**
 	 * Program entry. Parameters are ignored.

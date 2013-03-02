@@ -67,10 +67,10 @@ abstract class SHA2Core extends MDHelper {
 		0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
 	};
 
-	private int[] currentVal, W;
+	  int[] currentVal, W;
 
 	/** @see DigestEngine */
-	protected Digest copyState(SHA2Core dst)
+	Digest copyState(SHA2Core dst)
 	{
 		System.arraycopy(currentVal, 0, dst.currentVal, 0,
 			currentVal.length);
@@ -84,7 +84,7 @@ abstract class SHA2Core extends MDHelper {
 	}
 
 	/** @see DigestEngine */
-	protected void engineReset()
+	void engineReset()
 	{
 		System.arraycopy(getInitVal(), 0, currentVal, 0, 8);
 	}
@@ -97,16 +97,16 @@ abstract class SHA2Core extends MDHelper {
 	abstract int[] getInitVal();
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	void doPadding(int outputOffset, byte... output)
 	{
 		makeMDPadding();
 		int olen = getDigestLength();
 		for (int i = 0, j = 0; j < olen; i ++, j += 4)
-			encodeBEInt(currentVal[i], output, outputOffset + j);
+			encodeBEInt(currentVal[i], outputOffset + j, output);
 	}
 
 	/** @see DigestEngine */
-	protected void doInit()
+	void doInit()
 	{
 		currentVal = new int[8];
 		W = new int[64];
@@ -118,13 +118,13 @@ abstract class SHA2Core extends MDHelper {
 	 * {@code buf} at offset {@code off}, in big-endian
 	 * convention (most significant byte first).
 	 *
-	 * @param val   the value to encode
-	 * @param buf   the destination buffer
-	 * @param off   the destination offset
-	 */
-	private static final void encodeBEInt(int val, byte[] buf, int off)
+     * @param val   the value to encode
+     * @param off   the destination offset
+     * @param buf   the destination buffer
+     */
+	private static void encodeBEInt(int val, int off, byte... buf)
 	{
-		buf[off + 0] = (byte)(val >>> 24);
+		buf[off] = (byte)(val >>> 24);
 		buf[off + 1] = (byte)(val >>> 16);
 		buf[off + 2] = (byte)(val >>> 8);
 		buf[off + 3] = (byte)val;
@@ -134,16 +134,17 @@ abstract class SHA2Core extends MDHelper {
 	 * Decode a 32-bit big-endian word from the array {@code buf}
 	 * at offset {@code off}.
 	 *
-	 * @param buf   the source buffer
-	 * @param off   the source offset
-	 * @return  the decoded value
+	 *
+     * @param off   the source offset
+     * @param buf   the source buffer
+     * @return  the decoded value
 	 */
-	private static final int decodeBEInt(byte[] buf, int off)
+	private static int decodeBEInt(int off, byte... buf)
 	{
-		return ((buf[off] & 0xFF) << 24)
-			| ((buf[off + 1] & 0xFF) << 16)
-			| ((buf[off + 2] & 0xFF) << 8)
-			| (buf[off + 3] & 0xFF);
+		return (buf[off] & 0xFF) << 24
+			| (buf[off + 1] & 0xFF) << 16
+			| (buf[off + 2] & 0xFF) << 8
+			| buf[off + 3] & 0xFF;
 	}
 
 	/**
@@ -155,13 +156,13 @@ abstract class SHA2Core extends MDHelper {
 	 * @param n   the rotation count (between 1 and 31)
 	 * @return  the rotated value
 	*/
-	static private int circularLeft(int x, int n)
+    static int circularLeft(int x, int n)
 	{
-		return (x << n) | (x >>> (32 - n));
+		return x << n | x >>> 32 - n;
 	}
 
 	/** @see DigestEngine */
-	protected void processBlock(byte[] data)
+	void processBlock(byte... data)
 	{
 		int A = currentVal[0];
 		int B = currentVal[1];
@@ -173,24 +174,24 @@ abstract class SHA2Core extends MDHelper {
 		int H = currentVal[7];
 
 		for (int i = 0; i < 16; i ++)
-			W[i] = decodeBEInt(data, 4 * i);
+			W[i] = decodeBEInt(4 * i, data);
 		for (int i = 16; i < 64; i ++) {
 			W[i] = (circularLeft(W[i - 2], 15)
 				^ circularLeft(W[i - 2], 13)
-				^ (W[i - 2] >>> 10))
+				^ W[i - 2] >>> 10)
 				+ W[i - 7]
 				+ (circularLeft(W[i - 15], 25)
 				^ circularLeft(W[i - 15], 14)
-				^ (W[i - 15] >>> 3))
+				^ W[i - 15] >>> 3)
 				+ W[i - 16];
 		}
 		for (int i = 0; i < 64; i ++) {
 			int T1 = H + (circularLeft(E, 26) ^ circularLeft(E, 21)
-				^ circularLeft(E, 7)) + ((F & E) ^ (G & ~E))
+				^ circularLeft(E, 7)) + (F & E ^ G & ~E)
 				+ K[i] + W[i];
 			int T2 = (circularLeft(A, 30) ^ circularLeft(A, 19)
 				^ circularLeft(A, 10))
-				+ ((A & B) ^ (A & C) ^ (B & C));
+				+ (A & B ^ A & C ^ B & C);
 			H = G; G = F; F = E; E = D + T1;
 			D = C; C = B; B = A; A = T1 + T2;
 		}
