@@ -165,14 +165,14 @@ abstract class SHA2Core extends MDHelper {
 	/** @see DigestEngine */
 	void processBlock(byte... data)
 	{
-		int A = currentVal[0];
-		int B = currentVal[1];
-		int C = currentVal[2];
-		int D = currentVal[3];
-		int E = currentVal[4];
-		int F = currentVal[5];
-		int G = currentVal[6];
-		int H = currentVal[7];
+        int H = currentVal[7];
+        int G = currentVal[6];
+        int F = currentVal[5];
+        int E = currentVal[4];
+        int D = currentVal[3];
+        int C = currentVal[2];
+        int B = currentVal[1];
+        int A = currentVal[0];
 
 		for (int i = 0; i < 16; i ++)
 			W[i] = decodeBEInt(4 * i, data);
