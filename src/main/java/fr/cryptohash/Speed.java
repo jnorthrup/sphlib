@@ -65,7 +65,7 @@ public class Speed {
      */
     public static void main(String[] args)
             throws Exception {
-        SHA256.main();
+        TestSha.main();
         SHA256 d = new SHA256();
         speed(d.toString(), d);
         speed(d.toString(), d);
