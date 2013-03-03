@@ -37,7 +37,7 @@ package fr.cryptohash;
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends MDHelper {
+public class SHA256 extends DigestEngine {
 
 
 
@@ -69,23 +69,26 @@ public class SHA256 extends MDHelper {
     };
     int[] currentVal;
     int[] W;
+    boolean littleEndian;
+    byte[] countBuf;
+    byte fbyte;
 
     /**
      * Create the object.
      */
     SHA256() {
-        super(false, 8);
+        init1(false, 8, (byte) 128);
     }
 
     /**
-     * Encode the 32-bit word {@code val} into the array
-     * {@code buf} at offset {@code off}, in big-endian
-     * convention (most significant byte first).
-     *
-     * @param val the value to encode
-     * @param off the destination offset
-     * @param buf the destination buffer
-     */
+         * Encode the 32-bit word {@code val} into the array
+         * {@code buf} at offset {@code off}, in big-endian
+         * convention (most significant byte first).
+         *
+         * @param val   the value to encode
+         * @param off   the destination offset
+         * @param buf   the destination buffer
+         */
     private static void encodeBEInt(int val, int off, byte... buf) {
         buf[off++] = (byte) (val >>> 24);
         buf[off ++] = (byte) (val >>> 16);
@@ -130,6 +133,23 @@ public class SHA256 extends MDHelper {
 
     private static int c26(int e) {
         return e << 26 | e >>> 32 - 26;
+    }
+
+    /**
+     * Encode the 32-bit word {@code val} into the array
+     * {@code buf} at offset {@code off}, in little-endian
+     * convention (least significant byte first).
+     *
+* @param val   the value to encode
+* @param off   the destination offset
+* @param buf   the destination buffer
+*/
+    private static void encodeLEInt(int val, int off, byte... buf)
+    {
+        buf[off] = (byte)val;
+        buf[off + 1] = (byte)(val >>> 8);
+        buf[off + 2] = (byte)(val >>> 16);
+        buf[off + 3] = (byte)(val >>> 24);
     }
 
     /** @see SHA2Core */
@@ -668,5 +688,46 @@ public class SHA256 extends MDHelper {
      */
     public String toString() {
         return "SHA-" + (getDigestLength() << 3);
+    }
+
+    private void init1(boolean littleEndian, int lenlen, byte fbyte) {
+        this.littleEndian = littleEndian;
+        countBuf = new byte[lenlen];
+        this.fbyte = fbyte;
+    }
+
+    /**
+     * Compute the padding. The padding data is input into the engine,
+     * which is flushed.
+     */
+    void makeMDPadding()
+    {
+        int dataLen = flush();
+        int blen = getBlockLength();
+        long currentLength = getBlockCount() * (long)blen;
+        currentLength = (currentLength + (long)dataLen) * 8L;
+        int lenlen = countBuf.length;
+        if (littleEndian) {
+            encodeLEInt((int)currentLength, 0, countBuf);
+            encodeLEInt((int)(currentLength >>> 32), 4, countBuf);
+        } else {
+            encodeBEInt((int) (currentLength >>> 32),
+                    lenlen - 8, countBuf);
+            encodeBEInt((int) currentLength,
+                    lenlen - 4, countBuf);
+        }
+        int endLen = (dataLen + lenlen + blen) & ~(blen - 1);
+        update(fbyte);
+        for (int i = dataLen + 1; i < endLen - lenlen; i ++)
+            update((byte)0);
+        update(countBuf);
+
+        /*
+         * This code is used only for debugging purposes.
+         *
+        if (flush() != 0)
+            throw new Error("panic: buffering went astray");
+         *
+         */
     }
 }
