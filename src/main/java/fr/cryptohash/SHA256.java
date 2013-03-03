@@ -729,5 +729,160 @@ public class SHA256 extends DigestEngine {
             throw new Error("panic: buffering went astray");
          *
          */
+    }            	/**
+     * Program entry. Parameters are ignored.
+     *
+     * @param args   the parameter input (ignored)
+     */
+    public static void main(String[] args)
+    {
+        testSHA256();
     }
+
+    private static void fail(String message)
+    {
+        throw new RuntimeException("test failed: " + message);
+    }
+
+    private static byte[] strtobin(String str)
+    {
+        int blen = str.length() / 2;
+        byte[] buf = new byte[blen];
+        for (int i = 0; i < blen; i ++) {
+            String bs = str.substring(i * 2, i * 2 + 2);
+            buf[i] = (byte)Integer.parseInt(bs, 16);
+        }
+        return buf;
+    }
+
+    private static byte[] encodeLatin1(String str)
+    {
+        int blen = str.length();
+        byte[] buf = new byte[blen];
+        for (int i = 0; i < blen; i ++)
+            buf[i] = (byte)str.charAt(i);
+        return buf;
+    }
+
+    private static boolean equals(byte[] b1, byte[] b2)
+    {
+        if (b1 != b2) if (b1 != null && b2 != null && b1.length == b2.length) {
+            for (int i = 0; i < b1.length; i++)
+                if (b1[i] != b2[i])
+                    return false;
+            return true;
+        } else {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    private static void assertTrue(boolean expr)
+    {
+        if (!expr)
+            fail("assertion failed");
+    }
+
+    private static void assertEquals(byte[] b1, byte[] b2)
+    {
+        if (!equals(b1, b2))
+            fail("byte streams are not equal");
+    }
+
+    private static void assertNotEquals(byte[] b1, byte[] b2)
+    {
+        if (equals(b1, b2))
+            fail("byte streams are equal");
+    }
+
+    private static void reportSuccess(String name)
+    {
+        System.out.println("===== test " + name + " passed");
+    }
+
+    private static void testKat(Digest dig, byte[] buf, byte[] exp)
+    {
+		/*
+		 * First test the hashing itself.
+		 */
+        byte[] out = dig.digest(buf);
+        assertEquals(out, exp);
+
+		/*
+		 * Now the update() API; this also exercises auto-reset.
+		 */
+        for (int i = 0; i < buf.length; i ++)
+            dig.update(buf[i]);
+        assertEquals(dig.digest(), exp);
+
+		/*
+		 * The cloning API.
+		 */
+        int blen = buf.length;
+        dig.update( 0, blen / 2,buf);
+        Digest dig2 = dig.copy();
+        dig.update( blen / 2, blen - (blen / 2),buf );
+        assertEquals(dig.digest(), exp);
+        dig2.update(blen / 2, blen - (blen / 2),buf);
+        assertEquals(dig2.digest(), exp);
+    }
+
+    private static void testKat(Digest dig, String data, String ref)
+    {
+        testKat(dig, encodeLatin1(data), strtobin(ref));
+    }
+
+    private static void testKatHex(Digest dig, String data, String ref)
+    {
+        testKat(dig, strtobin(data), strtobin(ref));
+    }
+
+    private static void testKatMillionA(Digest dig, String ref)
+    {
+        byte[] buf = new byte[1000];
+        for (int i = 0; i < 1000; i ++)
+            buf[i] = 'a';
+        for (int i = 0; i < 1000; i ++)
+            dig.update(buf);
+        assertEquals(dig.digest(), strtobin(ref));
+    }
+
+    private static void testCollision(Digest dig, String s1, String s2)
+    {
+        byte[] msg1 = strtobin(s1);
+        byte[] msg2 = strtobin(s2);
+        assertNotEquals(msg1, msg2);
+        assertEquals(dig.digest(msg1), dig.digest(msg2));
+    }
+
+    /**
+     * Test SHA-256 implementation.
+     */
+    private static void testSHA256()
+    {
+        Digest dig = new SHA256();
+        testKat(dig, "abc",
+                "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
+        testKat(dig, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
+                "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1");
+
+        testKatMillionA(dig,
+                "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");
+
+        reportSuccess("SHA-256");
+    }
+
+    public static void main1(String... a) {
+
+        SHA256 sha256 = new SHA256();
+        byte[] digest = sha256.digest("hi".getBytes());
+        String s = "";
+        for (byte b : digest) {
+            s += Integer.toHexString(0xff & b + 0x100).substring(1);
+        }
+        System.err.println(": " + s);
+    }
+
 }
