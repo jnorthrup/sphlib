@@ -108,41 +108,28 @@ public class SHA256 extends MDHelper {
                 | buf[off + 3] & 0xFF;
     }
 
-    /**
-     * Perform a circular rotation by {@code n} to the left
-     * of the 32-bit word {@code x}. The {@code n} parameter
-     * must lie between 1 and 31 (inclusive).
-     *
-     * @param n the rotation count (between 1 and 31)
-     * @param x the value to rotate
-     * @return the rotated value
-     */
-    static int circularLeft(int n, int x) {
-        return x << n | x >>> 32 - n;
-    }
-
     private static int c10(int a) {
-        return SHA256.circularLeft(10, a);
+        return a << 10 | a >>> 32 - 10;
     }
 
     private static int c19(int a) {
-        return SHA256.circularLeft(19, a);
+        return a << 19 | a >>> 32 - 19;
     }
 
     private static int c30(int a) {
-        return SHA256.circularLeft(30, a);
+        return a << 30 | a >>> 32 - 30;
     }
 
     private static int c7(int e) {
-        return SHA256.circularLeft(7, e);
+        return e << 7 | e >>> 32 - 7;
     }
 
     private static int c21(int e) {
-        return SHA256.circularLeft(21, e);
+        return e << 21 | e >>> 32 - 21;
     }
 
     private static int c26(int e) {
-        return SHA256.circularLeft(26, e);
+        return e << 26 | e >>> 32 - 26;
     }
 
     /** @see SHA2Core */
@@ -223,16 +210,17 @@ public class SHA256 extends MDHelper {
         for (int i = 16; i < 64; i++) {
             int x = W[i - 2];
             int x1 = W[i - 15];
-            W[i] = (SHA256.circularLeft(15, x) ^ SHA256.circularLeft(13, x) ^ x >>> 10)
+            W[i] = r3(x << 15 | x >>> 32 - 15, x << 13 | x >>> 32 - 13, x >>> 10)
                     + W[i - 7]
-                    + (SHA256.circularLeft(25, x1) ^ SHA256.circularLeft(14, x1) ^ x1 >>> 3)
+                    + r3(x1 << 25 | x1 >>> 32 - 25, x1 << 14 | x1 >>> 32 - 14, x1 >>> 3)
                     + W[i - 16];
         }
         for (int i = 0; i < 64; i++) {
-            int T1 = H + (c26(E) ^ c21(E) ^ c7(E)) + (F & E ^ G & ~E)
+            int T1 = H + r3(c26(E), c21(E), c7(E)) + (F & E ^ G & ~E)
                     + K[i] + W[i];
-            int T2 = (c30(A) ^ c19(A) ^ c10(A))
-                    + (A & B ^ A & C ^ B & C);
+            int i5 = r3(A & B, A & C, B & C);
+            int T2 = r3(c30(A), c19(A), c10(A))
+                    + i5;
             H = G;
             G = F;
             F = E;
@@ -669,6 +657,10 @@ public class SHA256 extends MDHelper {
 		currentVal[6] += G;
 		currentVal[7] += H;
 		*/
+    }
+
+    private static int r3(int i1, int i2, int i3) {
+        return (i1 ^ i2 ^ i3);
     }
 
     /**
