@@ -205,7 +205,7 @@ public class Speed {
 			String cn = (String)ORDERED_CLASSNAMES.elementAt(i);
 			if (!all && !todo.containsKey(cn))
 				continue;
-			DigestEngine d = (DigestEngine)Class.forName(
+			SHA256 d = (SHA256)Class.forName(
 				"fr.cryptohash." + cn).newInstance();
 			speed(d.toString(), d);
             speed(d.toString(), d);
@@ -232,7 +232,7 @@ public class Speed {
 		System.exit(1);
 	}
 
-	private static void speed(String name, DigestEngine dig)
+	private static void speed(String name, SHA256 dig)
 	{
 		System.out.println("Speed check: " + name);
 		byte[] buf = new byte[8192];
@@ -294,7 +294,7 @@ num <<= 1;
 		}
 	}
 
-	private static long speedUnit(DigestEngine dig, int j,
+	private static long speedUnit(SHA256 dig, int j,
 		byte[] buf, int len, long num)
 	{
 		int dlen = dig.getDigestLength();
@@ -309,7 +309,7 @@ num <<= 1;
 		return end - orig;
 	}
 
-	private static long speedLong(DigestEngine dig, byte[] buf, int len, long num)
+	private static long speedLong(SHA256 dig, byte[] buf, int len, long num)
 	{
 		byte[] out = new byte[dig.getDigestLength()];
 		long orig = System.currentTimeMillis();
