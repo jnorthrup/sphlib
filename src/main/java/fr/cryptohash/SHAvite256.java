@@ -1,10 +1,11 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: SHAvite256.java 222 2010-06-09 10:47:13Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the SHAvite-256 digest algorithm under the
+ * {@link Digest} API (in the SHAvite-3 specification, this function
+ * is known as "SHAvite-3 with a 256-bit output").</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,27 +34,27 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 222 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class SHAvite256 extends SHAviteSmallCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public SHAvite256()
 	{
 		super();
 	}
 
-	/** The initial value for SHA-256. */
+	/** The initial value for SHAvite-256. */
 	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+		0x49BB3E47, 0x2674860D, 0xA8B392AC, 0x021AC4E6,
+		0x409283CF, 0x620E5D86, 0x6D929DCB, 0x96CC2A8B
 	};
 
-	/** @see SHA2Core */
+	/** @see SHAviteSmallCore */
 	int[] getInitVal()
 	{
 		return initVal;
@@ -68,6 +69,6 @@ public class SHA256 extends SHA2Core {
 	/** @see Digest */
 	public Digest copy()
 	{
-		return copyState(new SHA256());
+		return copyState(new SHAvite256());
 	}
 }

@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: SIMD512.java 156 2010-04-26 17:55:11Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the SIMD-512 digest algorithm under the
+ * {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -37,23 +37,29 @@ package fr.cryptohash;
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class SIMD512 extends SIMDBigCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public SIMD512()
 	{
 		super();
 	}
 
-	/** The initial value for SHA-256. */
+	/** The initial value for SIMD-512. */
 	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+		0x0BA16B95, 0x72F999AD, 0x9FECC2AE, 0xBA3264FC,
+		0x5E894929, 0x8E9F30E5, 0x2F1DAA37, 0xF0F2C558,
+		0xAC506643, 0xA90635A5, 0xE25B878B, 0xAAB7878F,
+		0x88817F7A, 0x0A02892B, 0x559A7550, 0x598F657E,
+		0x7EEF60A1, 0x6B70E3E8, 0x9C1714D1, 0xB958E2A8,
+		0xAB02675E, 0xED1C014F, 0xCD8D65BB, 0xFDB7A257,
+		0x09254899, 0xD699C7BC, 0x9019B6DC, 0x2B9022E4,
+		0x8FA14956, 0x21BF9BD3, 0xB94D0943, 0x6FFDDC22
 	};
 
-	/** @see SHA2Core */
+	/** @see SIMDSmallCore */
 	int[] getInitVal()
 	{
 		return initVal;
@@ -62,12 +68,12 @@ public class SHA256 extends SHA2Core {
 	/** @see Digest */
 	public int getDigestLength()
 	{
-		return 32;
+		return 64;
 	}
 
 	/** @see Digest */
 	public Digest copy()
 	{
-		return copyState(new SHA256());
+		return copyState(new SIMD512());
 	}
 }

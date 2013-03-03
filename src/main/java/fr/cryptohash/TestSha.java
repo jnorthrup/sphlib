@@ -18,8 +18,8 @@ public class TestSha {
     public static void main(String... args)
     {
         SHA256 dig = new SHA256();
-        testKat(dig, encodeLatin1("abc"),  strtobin("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"));
-        testKat(dig, encodeLatin1("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"),  strtobin("248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"));
+        testKat(dig, encodeLatin1("abc"), strtobin("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"));
+        testKat(dig, encodeLatin1("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"), strtobin("248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"));
 
         testKatMillionA(dig,
                 "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");

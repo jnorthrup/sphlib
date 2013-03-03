@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: Fugue224.java 159 2010-05-01 15:41:17Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the Fugue-224 digest algorithm under the
+ * {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,28 +33,28 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 159 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class Fugue224 extends Fugue2Core {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public Fugue224()
 	{
 		super();
 	}
 
-	/** The initial value for SHA-256. */
+	/** The initial value for Fugue-224. */
 	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+		0xf4c9120d, 0x6286f757, 0xee39e01c, 0xe074e3cb,
+		0xa1127c62, 0x9a43d215, 0xbd8d679a
 	};
 
-	/** @see SHA2Core */
-	int[] getInitVal()
+	/** @see FugueCore */
+	int[] getIV()
 	{
 		return initVal;
 	}
@@ -62,12 +62,12 @@ public class SHA256 extends SHA2Core {
 	/** @see Digest */
 	public int getDigestLength()
 	{
-		return 32;
+		return 28;
 	}
 
-	/** @see Digest */
-	public Digest copy()
+	/** @see FugueCore */
+	FugueCore dup()
 	{
-		return copyState(new SHA256());
+		return new Fugue224();
 	}
 }

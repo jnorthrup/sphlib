@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: JH224.java 255 2011-06-07 19:50:20Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the JH-224 digest algorithm under the
+ * {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,41 +33,45 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 255 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class JH224 extends JHCore {
+
+	private static final long[] IV = {
+		0x2dfedd62f99a98acL, 0xae7cacd619d634e7L,
+		0xa4831005bc301216L, 0xb86038c6c9661494L,
+		0x66d9899f2580706fL, 0xce9ea31b1d9b1adcL,
+		0x11e8325f7b366e10L, 0xf994857f02fa06c1L,
+		0x1b4f1b5cd8c840b3L, 0x97f6a17f6e738099L,
+		0xdcdf93a5adeaa3d3L, 0xa431e8dec9539a68L,
+		0x22b4a98aec86a1e4L, 0xd574ac959ce56cf0L,
+		0x15960deab5ab2bbfL, 0x9611dcf0dd64ea6eL
+	};
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public JH224()
 	{
-		super();
-	}
-
-	/** The initial value for SHA-256. */
-	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-	};
-
-	/** @see SHA2Core */
-	int[] getInitVal()
-	{
-		return initVal;
-	}
-
-	/** @see Digest */
-	public int getDigestLength()
-	{
-		return 32;
 	}
 
 	/** @see Digest */
 	public Digest copy()
 	{
-		return copyState(new SHA256());
+		return copyState(new JH224());
+	}
+
+	/** @see Digest */
+	public int getDigestLength()
+	{
+		return 28;
+	}
+
+	/** @see JHCore */
+	long[] getIV()
+	{
+		return IV;
 	}
 }

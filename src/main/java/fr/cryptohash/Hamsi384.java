@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: Hamsi384.java 206 2010-06-01 18:18:57Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the Hamsi-384 digest algorithm under the
+ * {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,41 +33,42 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 206 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class Hamsi384 extends HamsiBigCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public Hamsi384()
 	{
 		super();
-	}
-
-	/** The initial value for SHA-256. */
-	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-	};
-
-	/** @see SHA2Core */
-	int[] getInitVal()
-	{
-		return initVal;
 	}
 
 	/** @see Digest */
 	public int getDigestLength()
 	{
-		return 32;
+		return 48;
 	}
 
-	/** @see Digest */
-	public Digest copy()
+	private static final int[] IV = {
+		0x656b7472, 0x6f746563, 0x686e6965, 0x6b2c2043,
+		0x6f6d7075, 0x74657220, 0x53656375, 0x72697479,
+		0x20616e64, 0x20496e64, 0x75737472, 0x69616c20,
+		0x43727970, 0x746f6772, 0x61706879, 0x2c204b61
+	};
+
+	/** @see HamsiBigCore */
+	int[] getIV()
 	{
-		return copyState(new SHA256());
+		return IV;
+	}
+
+	/** @see HamsiBigCore */
+	HamsiBigCore dup()
+	{
+		return new Hamsi384();
 	}
 }

@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: BMW256.java 166 2010-05-03 16:44:36Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the BMW-256 ("Blue Midnight Wish") digest
+ * algorithm under the {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,27 +33,29 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 166 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class BMW256 extends BMWSmallCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public BMW256()
 	{
 		super();
 	}
 
-	/** The initial value for SHA-256. */
+	/** The initial value for BMW-256. */
 	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+		0x40414243, 0x44454647, 0x48494A4B, 0x4C4D4E4F,
+		0x50515253, 0x54555657, 0x58595A5B, 0x5C5D5E5F,
+		0x60616263, 0x64656667, 0x68696A6B, 0x6C6D6E6F,
+		0x70717273, 0x74757677, 0x78797A7B, 0x7C7D7E7F
 	};
 
-	/** @see SHA2Core */
+	/** @see BMWSmallCore */
 	int[] getInitVal()
 	{
 		return initVal;
@@ -68,6 +70,6 @@ public class SHA256 extends SHA2Core {
 	/** @see Digest */
 	public Digest copy()
 	{
-		return copyState(new SHA256());
+		return copyState(new BMW256());
 	}
 }

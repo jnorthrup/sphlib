@@ -1,10 +1,11 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: Tiger2.java 214 2010-06-03 17:25:08Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the Tiger2 hash algorithm under the
+ * {@link Digest} API. Tiger2 differs from Tiger by the padding,
+ * which is identical to that of MD4/MD5 in Tiger2, but not in Tiger.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,41 +34,29 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 214 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class Tiger2 extends TigerCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public Tiger2()
 	{
-		super();
-	}
-
-	/** The initial value for SHA-256. */
-	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-	};
-
-	/** @see SHA2Core */
-	int[] getInitVal()
-	{
-		return initVal;
-	}
-
-	/** @see Digest */
-	public int getDigestLength()
-	{
-		return 32;
+		super((byte)0x80);
 	}
 
 	/** @see Digest */
 	public Digest copy()
 	{
-		return copyState(new SHA256());
+		return copyState(new Tiger2());
+	}
+
+	/** @see Digest */
+	public String toString()
+	{
+		return "Tiger2";
 	}
 }

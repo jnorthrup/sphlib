@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: CubeHash256.java 183 2010-05-08 21:34:53Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the CubeHash-256 digest algorithm under the
+ * {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,30 +33,37 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 183 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class CubeHash256 extends CubeHashCore {
+
+	private static final int[] IV = {
+		0xEA2BD4B4, 0xCCD6F29F, 0x63117E71,
+		0x35481EAE, 0x22512D5B, 0xE5D94E63,
+		0x7E624131, 0xF4CC12BE, 0xC2D0B696,
+		0x42AF2070, 0xD0720C35, 0x3361DA8C,
+		0x28CCECA4, 0x8EF8AD83, 0x4680AC00,
+		0x40E5FBAB, 0xD89041C3, 0x6107FBD5,
+		0x6C859D41, 0xF0B26679, 0x09392549,
+		0x5FA25603, 0x65C892FD, 0x93CB6285,
+		0x2AF2B5AE, 0x9E4B4E60, 0x774ABFDD,
+		0x85254725, 0x15815AEB, 0x4AB6AAD6,
+		0x9CDAF8AF, 0xD6032C0A
+	};
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public CubeHash256()
 	{
-		super();
 	}
 
-	/** The initial value for SHA-256. */
-	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
-	};
-
-	/** @see SHA2Core */
-	int[] getInitVal()
+	/** @see Digest */
+	public Digest copy()
 	{
-		return initVal;
+		return copyState(new CubeHash256());
 	}
 
 	/** @see Digest */
@@ -65,9 +72,9 @@ public class SHA256 extends SHA2Core {
 		return 32;
 	}
 
-	/** @see Digest */
-	public Digest copy()
+	/** @see CubeHashCore */
+	int[] getIV()
 	{
-		return copyState(new SHA256());
+		return IV;
 	}
 }

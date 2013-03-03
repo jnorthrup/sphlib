@@ -1,10 +1,10 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: BMW384.java 166 2010-05-03 16:44:36Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the BMW-384 ("Blue Midnight Wish") digest
+ * algorithm under the {@link Digest} API.</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,28 +33,34 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 166 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class BMW384 extends BMWBigCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public BMW384()
 	{
 		super();
 	}
 
-	/** The initial value for SHA-256. */
-	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+	/** The initial value for BMW-384. */
+	private static final long[] initVal = {
+		0x0001020304050607L, 0x08090A0B0C0D0E0FL,
+		0x1011121314151617L, 0x18191A1B1C1D1E1FL,
+		0x2021222324252627L, 0x28292A2B2C2D2E2FL,
+		0x3031323334353637L, 0x38393A3B3C3D3E3FL,
+		0x4041424344454647L, 0x48494A4B4C4D4E4FL,
+		0x5051525354555657L, 0x58595A5B5C5D5E5FL,
+		0x6061626364656667L, 0x68696A6B6C6D6E6FL,
+		0x7071727374757677L, 0x78797A7B7C7D7E7FL
 	};
 
-	/** @see SHA2Core */
-	int[] getInitVal()
+	/** @see BMWSmallCore */
+	long[] getInitVal()
 	{
 		return initVal;
 	}
@@ -62,12 +68,12 @@ public class SHA256 extends SHA2Core {
 	/** @see Digest */
 	public int getDigestLength()
 	{
-		return 32;
+		return 48;
 	}
 
 	/** @see Digest */
 	public Digest copy()
 	{
-		return copyState(new SHA256());
+		return copyState(new BMW384());
 	}
 }

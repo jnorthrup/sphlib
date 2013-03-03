@@ -1,10 +1,11 @@
-// $Id: SHA256.java 156 2010-04-26 17:55:11Z tp $
+// $Id: Skein512.java 253 2011-06-07 18:33:10Z tp $
 
 package fr.cryptohash;
 
 /**
- * <p>This class implements the SHA-256 digest algorithm under the
- * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
+ * <p>This class implements the Skein-512 digest algorithm under the
+ * {@link Digest} API. In the Skein specification, that function is
+ * called under the full name "Skein-512-512".</p>
  *
  * <pre>
  * ==========================(LICENSE BEGIN)============================
@@ -33,28 +34,30 @@ package fr.cryptohash;
  * ===========================(LICENSE END)=============================
  * </pre>
  *
- * @version   $Revision: 156 $
+ * @version   $Revision: 253 $
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public class SHA256 extends SHA2Core {
+public class Skein512 extends SkeinBigCore {
 
 	/**
 	 * Create the engine.
 	 */
-	public SHA256()
+	public Skein512()
 	{
 		super();
 	}
 
-	/** The initial value for SHA-256. */
-	private static final int[] initVal = {
-		0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
-		0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19
+	/** The initial value for Skein-512. */
+	private static final long[] initVal = {
+		0x4903ADFF749C51CEL, 0x0D95DE399746DF03L,
+		0x8FD1934127C79BCEL, 0x9A255629FF352CB1L,
+		0x5DB62599DF6CA7B0L, 0xEABE394CA9D5C3F4L,
+		0x991112C71A75B523L, 0xAE18A40B660FCC33L
 	};
 
-	/** @see SHA2Core */
-	int[] getInitVal()
+	/** @see SkeinBigCore */
+	long[] getInitVal()
 	{
 		return initVal;
 	}
@@ -62,12 +65,12 @@ public class SHA256 extends SHA2Core {
 	/** @see Digest */
 	public int getDigestLength()
 	{
-		return 32;
+		return 64;
 	}
 
-	/** @see Digest */
-	public Digest copy()
+	/** @see SkeinBigCore */
+	SkeinBigCore dup()
 	{
-		return copyState(new SHA256());
+		return new Skein512();
 	}
 }
