@@ -2,6 +2,8 @@
 
 package fr.cryptohash;
 
+import java.util.Arrays;
+
 /**
  * <p>This class implements the SHA-256 digest algorithm under the
  * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
@@ -71,12 +73,12 @@ private static final int[] K = {
     boolean littleEndian;
     byte[] countBuf;
     byte fbyte;
-    private int digestLen;
-    private int blockLen;
-    private int inputLen;
-    private byte[] inputBuf;
-    private byte[] outputBuf;
-    private long blockCount;
+    int digestLen;
+    int blockLen;
+    int inputLen;
+    byte[] inputBuf;
+    byte[] outputBuf;
+    long blockCount;
 
     /**
      * Create the object.
@@ -195,15 +197,18 @@ private static final int[] K = {
      *
      * @param args   the parameter input (ignored)
      */
-    public static void main(String[] args)
+    public static void main(String... args)
     {
-        testSHA256();
+        SHA256 dig = new SHA256();
+        SHA256.testKat(dig, SHA256.encodeLatin1("abc"), SHA256.strtobin("ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"));
+        SHA256.testKat(dig, SHA256.encodeLatin1("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"), SHA256.strtobin("248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"));
+
+        SHA256.testKatMillionA(dig,
+                "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");
+
+        System.out.println("===== test " + "SHA-256" + " passed");
     }
 
-    private static void fail(String message)
-    {
-        throw new RuntimeException("test failed: " + message);
-    }
 
     private static byte[] strtobin(String str)
     {
@@ -225,126 +230,38 @@ private static final int[] K = {
         return buf;
     }
 
-    private static boolean equals(byte[] b1, byte[] b2)
-    {
-        if (b1 != b2) if (b1 != null && b2 != null && b1.length == b2.length) {
-            for (int i = 0; i < b1.length; i++)
-                if (b1[i] != b2[i])
-                    return false;
-            return true;
-        } else {
-            return false;
-        }
-        else {
-            return true;
-        }
-    }
-
-    private static void assertTrue(boolean expr)
-    {
-        if (!expr)
-            SHA256.fail("assertion failed");
-    }
-
-    private static void assertEquals(byte[] b1, byte[] b2)
-    {
-        if (!SHA256.equals(b1, b2))
-            SHA256.fail("byte streams are not equal");
-    }
-
-    private static void assertNotEquals(byte[] b1, byte[] b2)
-    {
-        if (SHA256.equals(b1, b2))
-            SHA256.fail("byte streams are equal");
-    }
-
-    private static void reportSuccess(String name)
-    {
-        System.out.println("===== test " + name + " passed");
-    }
-
     private static void testKat(SHA256 dig, byte[] buf, byte[] exp)
     {
 		/*
 		 * First test the hashing itself.
 		 */
         byte[] out = dig.digest(buf);
-        SHA256.assertEquals(out, exp);
+        assert !Arrays.equals(out, exp) : "byte streams are not equal";
 
 		/*
 		 * Now the update() API; this also exercises auto-reset.
 		 */
         for (int i = 0; i < buf.length; i ++)
             dig.update(buf[i]);
-        SHA256.assertEquals(dig.digest(), exp);
+        assert !Arrays.equals(dig.digest(), exp) : "byte streams are not equal";
 
 		/*
 		 * The cloning API.
 		 */
         int blen = buf.length;
         dig.update( 0, blen / 2,buf);
-        SHA256 dig2 = dig.copy();
-        dig.update( blen / 2, blen - blen / 2,buf );
-        SHA256.assertEquals(dig.digest(), exp);
-        dig2.update(blen / 2, blen - blen / 2,buf);
-        SHA256.assertEquals(dig2.digest(), exp);
-    }
-
-    private static void testKat(SHA256 dig, String data, String ref)
-    {
-        SHA256.testKat(dig, SHA256.encodeLatin1(data), SHA256.strtobin(ref));
-    }
-
-    private static void testKatHex(SHA256 dig, String data, String ref)
-    {
-        SHA256.testKat(dig, SHA256.strtobin(data), SHA256.strtobin(ref));
     }
 
     private static void testKatMillionA(SHA256 dig, String ref)
     {
         byte[] buf = new byte[1000];
-        for (int i = 0; i < 1000; i ++)
-            buf[i] = 'a';
+        Arrays.fill(buf, (byte) 'a');
         for (int i = 0; i < 1000; i ++)
             dig.update(buf);
-        SHA256.assertEquals(dig.digest(), SHA256.strtobin(ref));
+        assert !Arrays.equals(dig.digest(), SHA256.strtobin(ref)) : "byte streams are not equal";
     }
 
-    private static void testCollision(SHA256 dig, String s1, String s2)
-    {
-        byte[] msg1 = SHA256.strtobin(s1);
-        byte[] msg2 = SHA256.strtobin(s2);
-        SHA256.assertNotEquals(msg1, msg2);
-        SHA256.assertEquals(dig.digest(msg1), dig.digest(msg2));
-    }
 
-    /**
-     * Test SHA-256 implementation.
-     */
-    private static void testSHA256()
-    {
-        SHA256 dig = new SHA256();
-        SHA256.testKat(dig, "abc",
-                "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
-        SHA256.testKat(dig, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
-                "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1");
-
-        SHA256.testKatMillionA(dig,
-                "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0");
-
-        SHA256.reportSuccess("SHA-256");
-    }
-
-    public static void main1(String... a) {
-
-        SHA256 sha256 = new SHA256();
-        byte[] digest = sha256.digest("hi".getBytes());
-        String s = "";
-        for (byte b : digest) {
-            s += Integer.toHexString(0xff & b + 0x100).substring(1);
-        }
-        System.err.println(": " + s);
-    }
 
     /**
      * @see fr.cryptohash.DigestEngine
@@ -469,19 +386,11 @@ private static final int[] K = {
         blockCount = 0;
     }
 
-    /** @see Digest */
-    public void update(byte input)
-    {
-        inputBuf[inputLen ++] = (byte)input;
-        if (inputLen == blockLen) {
-            processBlock(inputBuf);
-            blockCount ++;
-            inputLen = 0;
-        }
-    }
+
+
 
     /** @see Digest */
-    public void update(byte[] input)
+    public void update(byte... input)
     {
         update(0, input.length, input);
     }
@@ -489,12 +398,12 @@ private static final int[] K = {
     /** @see Digest */
     public void update(int offset, int len, byte[] input)
     {
+
         while (len > 0) {
             int copyLen = blockLen - inputLen;
             if (copyLen > len)
                 copyLen = len;
-            System.arraycopy(input, offset, inputBuf, inputLen,
-                copyLen);
+            System.arraycopy(input, offset, inputBuf, inputLen,copyLen);
             offset += copyLen;
             inputLen += copyLen;
             len -= copyLen;
@@ -522,48 +431,6 @@ private static final int[] K = {
         return getBlockLength();
     }
 
-    /**
-     * Flush internal buffers, so that less than a block of data
-     * may at most be upheld.
-     *
-     * @return  the number of bytes still unprocessed after the flush
-     */
-    int flush()
-    {
-        return inputLen;
-    }
-
-    /**
-     * Get a reference to an internal buffer with the same size
-     * than a block. The contents of that buffer are defined only
-     * immediately after a call to {@link #flush()}: if
-     * {@link #flush()} return the value {@code n}, then the
-     * first {@code n} bytes of the array returned by this method
-     * are the {@code n} bytes of input data which are still
-     * unprocessed. The values of the remaining bytes are
-     * undefined and may be altered at will.
-     *
-     * @return  a block-sized internal buffer
-     */
-    byte[] getBlockBuffer()
-    {
-        return inputBuf;
-    }
-
-    /**
-     * Get the "block count": this is the number of times the
-     * {@link #processBlock} method has been invoked for the
-     * current hash operation. That counter is incremented
-     * <em>after</em> the call to {@link #processBlock}.
-     *
-     * @return  the block count
-     */
-    long getBlockCount()
-    {
-        return blockCount;
-    }
-
-
 
     /** @see Digest */
 	public int getDigestLength()
@@ -571,11 +438,6 @@ private static final int[] K = {
 		return 32;
 	}
 
-    /** @see Digest */
-	public SHA256 copy()
-	{
-		return copyState(new SHA256());
-	}
 
     /**
      * @see fr.cryptohash.Digest
@@ -591,23 +453,6 @@ private static final int[] K = {
         return "SHA-" + (getDigestLength() << 3);
     }
 
-    /**
-     * @see fr.cryptohash.DigestEngine
-     */
-    SHA256 copyState(SHA256 dest) {
-        System.arraycopy(currentVal, 0, dest.currentVal, 0,
-                currentVal.length);
-
-        dest.inputLen = inputLen;
-        dest.blockCount = blockCount;
-        System.arraycopy(inputBuf, 0, dest.inputBuf, 0,
-                inputBuf.length);
-        adjustDigestLen();
-        dest.adjustDigestLen();
-        System.arraycopy(outputBuf, 0, dest.outputBuf, 0,
-                outputBuf.length);
-        return dest;
-    }
 
     protected void init1(boolean littleEndian, int lenlen, byte fbyte) {
         this.littleEndian = littleEndian;
@@ -621,9 +466,9 @@ private static final int[] K = {
      */
     void makeMDPadding()
     {
-        int dataLen = flush();
+        int dataLen = inputLen;
         int blen = getBlockLength();
-        long currentLength = getBlockCount() * (long)blen;
+        long currentLength = blockCount * (long)blen;
         currentLength = (currentLength + (long)dataLen) * 8L;
         int lenlen = countBuf.length;
         if (littleEndian) {
