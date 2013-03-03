@@ -112,27 +112,27 @@ public class SHA256 extends DigestEngine {
     }
 
     private static int c10(int a) {
-        return a << 10 | a >>> 32 - 10;
+        return a >>> 22 | a << 10;
     }
 
     private static int c19(int a) {
-        return a << 19 | a >>> 32 - 19;
+        return a >>> 13 | a << 19;
     }
 
     private static int c30(int a) {
-        return a << 30 | a >>> 32 - 30;
+        return a >>> 2 | a << 30;
     }
 
     private static int c7(int e) {
-        return e << 7 | e >>> 32 - 7;
+        return e >>> 25 | e << 7;
     }
 
     private static int c21(int e) {
-        return e << 21 | e >>> 32 - 21;
+        return e >>> 11 | e << 21;
     }
 
     private static int c26(int e) {
-        return e << 26 | e >>> 32 - 26;
+        return e >>> 6 | e << 26;
     }
 
     /**
@@ -153,7 +153,7 @@ public class SHA256 extends DigestEngine {
     }
 
     /** @see SHA2Core */
-	int[] getInitVal()
+    static int[] getInitVal()
 	{
 		return initVal;
 	}
@@ -679,8 +679,24 @@ public class SHA256 extends DigestEngine {
 		*/
     }
 
+    private static int c14(int x1) {
+        return x1 << 14 | x1 >>> 18;
+    }
+
+    private static int c25(int x1) {
+        return x1 << 25 | x1 >>> 7;
+    }
+
+    private static int c13(int x) {
+        return x << 13 | x >>> 19;
+    }
+
+    private static int c15(int x) {
+        return x << 15 | x >>> 17;
+    }
+
     private static int r3(int i1, int i2, int i3) {
-        return (i1 ^ i2 ^ i3);
+        return i1 ^ i2 ^ i3;
     }
 
     /**
@@ -716,7 +732,7 @@ public class SHA256 extends DigestEngine {
             encodeBEInt((int) currentLength,
                     lenlen - 4, countBuf);
         }
-        int endLen = (dataLen + lenlen + blen) & ~(blen - 1);
+        int endLen = dataLen + lenlen + blen & ~(blen - 1);
         update(fbyte);
         for (int i = dataLen + 1; i < endLen - lenlen; i ++)
             update((byte)0);
@@ -823,9 +839,9 @@ public class SHA256 extends DigestEngine {
         int blen = buf.length;
         dig.update( 0, blen / 2,buf);
         Digest dig2 = dig.copy();
-        dig.update( blen / 2, blen - (blen / 2),buf );
+        dig.update( blen / 2, blen - blen / 2,buf );
         assertEquals(dig.digest(), exp);
-        dig2.update(blen / 2, blen - (blen / 2),buf);
+        dig2.update(blen / 2, blen - blen / 2,buf);
         assertEquals(dig2.digest(), exp);
     }
 

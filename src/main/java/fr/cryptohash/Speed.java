@@ -210,6 +210,8 @@ public class Speed {
 			Digest d = (Digest)Class.forName(
 				"fr.cryptohash." + cn).newInstance();
 			speed(d.toString(), d);
+            speed(d.toString(), d);
+
 		}
 	}
 
@@ -242,28 +244,30 @@ public class Speed {
 		int j = 0;
 		long num = 2L;
 		for (int clen = 16;; clen <<= 2) {
-			if (clen == 4096) {
-				clen = 8192;
-				if (num > 1L)
-					num >>= 1;
-			}
+            switch (clen) {
+                case 4096:
+                    clen = 8192;
+                    if (num > 1L)
+                        num >>= 1;
+                    break;
+            }
 			long tt;
-			for (;;) {
-				tt = speedUnit(dig, j, buf, clen, num);
-				j += dlen;
-				if (j > (buf.length - dlen))
-					j = 0;
-				if (tt > 6000L) {
-					if (num <= 1L)
-						break;
-					num >>= 1L;
-				} else if (tt < 2000L) {
-					num += num;
-				} else {
-					break;
-				}
-			}
-			long tlen = (long)clen * num;
+            while (true) {
+                tt = speedUnit(dig, j, buf, clen, num);
+                j += dlen;
+                if (j > (buf.length - dlen))
+                    j = 0;
+                if (tt > 6000L) {
+                    if (num <= 1L)
+                        break;
+                    num >>= 1L;
+                } else if (tt < 2000L) {
+num <<= 1;
+                } else {
+                    break;
+                }
+            }
+            long tlen = (long)clen * num;
 			long div = 10L * tt;
 			long rate = (tlen + (div - 1) / 2) / div;
 			System.out.println("message length = "
