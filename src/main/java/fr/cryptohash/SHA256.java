@@ -87,10 +87,10 @@ public class SHA256 extends MDHelper {
      * @param buf the destination buffer
      */
     private static void encodeBEInt(int val, int off, byte... buf) {
-        buf[off] = (byte) (val >>> 24);
-        buf[off + 1] = (byte) (val >>> 16);
-        buf[off + 2] = (byte) (val >>> 8);
-        buf[off + 3] = (byte) val;
+        buf[off++] = (byte) (val >>> 24);
+        buf[off ++] = (byte) (val >>> 16);
+        buf[off ++] = (byte) (val >>> 8);
+        buf[off  ] = (byte) val;
     }
 
     /**
@@ -102,10 +102,10 @@ public class SHA256 extends MDHelper {
      * @return the decoded value
      */
     private static int decodeBEInt(int off, byte... buf) {
-        return (buf[off] & 0xFF) << 24
-                | (buf[off + 1] & 0xFF) << 16
-                | (buf[off + 2] & 0xFF) << 8
-                | buf[off + 3] & 0xFF;
+        return (buf[off++] & 0xFF) << 24
+                | (buf[off ++] & 0xFF) << 16
+                | (buf[off ++] & 0xFF) << 8
+                | buf[off ] & 0xFF;
     }
 
     private static int c10(int a) {
