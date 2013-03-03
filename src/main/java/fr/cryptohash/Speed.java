@@ -1,6 +1,6 @@
 // $Id: Speed.java 229 2010-06-16 20:22:27Z tp $
 
-package fr.cryptohash.check;
+package fr.cryptohash;
 
 import fr.cryptohash.Digest;
 

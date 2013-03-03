@@ -9,7 +9,7 @@
  * entry point (each contains a proper {@code main()} static method).
  * The {@link fr.cryptohash.check.ValidateDigests ValidateDigests} class runs
  * self-tests with hardcoded check vectors; it ignores its arguments. The
- * {@link fr.cryptohash.check.Speed Speed} class benchmarks the hash
+ * {@link fr.cryptohash.Speed Speed} class benchmarks the hash
  * function implementations for processing speed, over various message
  * lengths; the names of the functions to hash are given as argument. If
  * no argument is given then all implemented functions are benchmarked

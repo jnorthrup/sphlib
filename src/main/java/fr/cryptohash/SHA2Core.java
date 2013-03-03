@@ -67,7 +67,8 @@ abstract class SHA2Core extends MDHelper {
 		0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
 	};
 
-	  int[] currentVal, W;
+	  int[] currentVal;
+    int[] W;
 
 	/** @see DigestEngine */
 	Digest copyState(SHA2Core dst)
@@ -195,14 +196,14 @@ abstract class SHA2Core extends MDHelper {
 			H = G; G = F; F = E; E = D + T1;
 			D = C; C = B; B = A; A = T1 + T2;
 		}
-		currentVal[0] += A;
-		currentVal[1] += B;
-		currentVal[2] += C;
-		currentVal[3] += D;
-		currentVal[4] += E;
-		currentVal[5] += F;
-		currentVal[6] += G;
-		currentVal[7] += H;
+        currentVal[7] += H;
+        currentVal[6] += G;
+        currentVal[5] += F;
+        currentVal[4] += E;
+        currentVal[3] += D;
+        currentVal[2] += C;
+        currentVal[1] += B;
+        currentVal[0] += A;
 
 		/*
 		 * The version below unrolls 16 rounds and inlines

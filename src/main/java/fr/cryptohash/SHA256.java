@@ -39,13 +39,7 @@ package fr.cryptohash;
 
 public class SHA256 extends SHA2Core {
 
-	/**
-	 * Create the engine.
-	 */
-	public SHA256()
-	{
-		super();
-	}
+
 
 	/** The initial value for SHA-256. */
 	private static final int[] initVal = {
