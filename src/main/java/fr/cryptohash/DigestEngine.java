@@ -47,7 +47,7 @@ package fr.cryptohash;
  * @author    Thomas Pornin &lt;thomas.pornin@cryptolog.com&gt;
  */
 
-public abstract class DigestEngine implements Digest {
+public abstract class DigestEngine {
 
 	/**
 	 * Reset the hash algorithm state.
@@ -81,8 +81,11 @@ public abstract class DigestEngine implements Digest {
 	 */
 	abstract void doInit();
 
-	private int digestLen, blockLen, inputLen;
-	private byte[] inputBuf, outputBuf;
+	private int digestLen;
+    private int blockLen;
+    private int inputLen;
+	private byte[] inputBuf;
+    private byte[] outputBuf;
 	private long blockCount;
 
 	/**
@@ -251,7 +254,7 @@ public abstract class DigestEngine implements Digest {
 	 * @param dest   the copy
 	 * @return  the value {@code dest}
 	 */
-	Digest copyState(DigestEngine dest)
+	DigestEngine copyState(DigestEngine dest)
 	{
 		dest.inputLen = inputLen;
 		dest.blockCount = blockCount;
@@ -263,4 +266,47 @@ public abstract class DigestEngine implements Digest {
 			outputBuf.length);
 		return dest;
 	}
+
+    /**
+     * Get the natural hash function output length (in bytes).
+     *
+     * @return  the digest output length (in bytes)
+     */
+    public abstract int getDigestLength();
+
+    /**
+     * Clone the current state. The returned object evolves independantly
+     * of this object.
+     *
+     * @return  the clone
+     */
+    public abstract DigestEngine copy();
+
+    /**
+     * <p>Return the "block length" for the hash function. This
+     * value is naturally defined for iterated hash functions
+     * (Merkle-Damgard). It is used in HMAC (that's what the
+     * <a href="http://tools.ietf.org/html/rfc2104">HMAC specification</a>
+     * names the "{@code B}" parameter).</p>
+     *
+     * <p>If the function is "block-less" then this function may
+     * return {@code -n} where {@code n} is an integer such that the
+     * block length for HMAC ("{@code B}") will be inferred from the
+     * key length, by selecting the smallest multiple of {@code n}
+     * which is no smaller than the key length. For instance, for
+     * the Fugue-xxx hash functions, this function returns -4: the
+     * virtual block length B is the HMAC key length, rounded up to
+     * the next multiple of 4.</p>
+     *
+     * @return  the internal block length (in bytes), or {@code -n}
+     */
+    public abstract int getBlockLength();
+
+    /**
+     * <p>Get the display name for this function (e.g. {@code "SHA-1"}
+     * for SHA-1).</p>
+     *
+     * @see Object
+     */
+    public abstract String toString();
 }

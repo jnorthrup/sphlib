@@ -2,8 +2,6 @@
 
 package fr.cryptohash;
 
-import fr.cryptohash.Digest;
-
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -207,7 +205,7 @@ public class Speed {
 			String cn = (String)ORDERED_CLASSNAMES.elementAt(i);
 			if (!all && !todo.containsKey(cn))
 				continue;
-			Digest d = (Digest)Class.forName(
+			DigestEngine d = (DigestEngine)Class.forName(
 				"fr.cryptohash." + cn).newInstance();
 			speed(d.toString(), d);
             speed(d.toString(), d);
@@ -234,7 +232,7 @@ public class Speed {
 		System.exit(1);
 	}
 
-	private static void speed(String name, Digest dig)
+	private static void speed(String name, DigestEngine dig)
 	{
 		System.out.println("Speed check: " + name);
 		byte[] buf = new byte[8192];
@@ -296,7 +294,7 @@ num <<= 1;
 		}
 	}
 
-	private static long speedUnit(Digest dig, int j,
+	private static long speedUnit(DigestEngine dig, int j,
 		byte[] buf, int len, long num)
 	{
 		int dlen = dig.getDigestLength();
@@ -311,7 +309,7 @@ num <<= 1;
 		return end - orig;
 	}
 
-	private static long speedLong(Digest dig, byte[] buf, int len, long num)
+	private static long speedLong(DigestEngine dig, byte[] buf, int len, long num)
 	{
 		byte[] out = new byte[dig.getDigestLength()];
 		long orig = System.currentTimeMillis();

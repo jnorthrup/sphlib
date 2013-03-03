@@ -165,7 +165,7 @@ public class SHA256 extends DigestEngine {
 	}
 
 	/** @see Digest */
-	public Digest copy()
+	public DigestEngine copy()
 	{
 		return copyState(new SHA256());
 	}
@@ -173,7 +173,7 @@ public class SHA256 extends DigestEngine {
     /**
      * @see fr.cryptohash.DigestEngine
      */
-    Digest copyState(SHA256 dst) {
+    DigestEngine copyState(SHA256 dst) {
         System.arraycopy(currentVal, 0, dst.currentVal, 0,
                 currentVal.length);
         return super.copyState(dst);
@@ -400,7 +400,7 @@ public class SHA256 extends DigestEngine {
         System.out.println("===== test " + name + " passed");
     }
 
-    private static void testKat(Digest dig, byte[] buf, byte[] exp)
+    private static void testKat(DigestEngine dig, byte[] buf, byte[] exp)
     {
 		/*
 		 * First test the hashing itself.
@@ -420,24 +420,24 @@ public class SHA256 extends DigestEngine {
 		 */
         int blen = buf.length;
         dig.update( 0, blen / 2,buf);
-        Digest dig2 = dig.copy();
+        DigestEngine dig2 = dig.copy();
         dig.update( blen / 2, blen - blen / 2,buf );
         assertEquals(dig.digest(), exp);
         dig2.update(blen / 2, blen - blen / 2,buf);
         assertEquals(dig2.digest(), exp);
     }
 
-    private static void testKat(Digest dig, String data, String ref)
+    private static void testKat(DigestEngine dig, String data, String ref)
     {
         testKat(dig, encodeLatin1(data), strtobin(ref));
     }
 
-    private static void testKatHex(Digest dig, String data, String ref)
+    private static void testKatHex(DigestEngine dig, String data, String ref)
     {
         testKat(dig, strtobin(data), strtobin(ref));
     }
 
-    private static void testKatMillionA(Digest dig, String ref)
+    private static void testKatMillionA(DigestEngine dig, String ref)
     {
         byte[] buf = new byte[1000];
         for (int i = 0; i < 1000; i ++)
@@ -447,7 +447,7 @@ public class SHA256 extends DigestEngine {
         assertEquals(dig.digest(), strtobin(ref));
     }
 
-    private static void testCollision(Digest dig, String s1, String s2)
+    private static void testCollision(DigestEngine dig, String s1, String s2)
     {
         byte[] msg1 = strtobin(s1);
         byte[] msg2 = strtobin(s2);
@@ -460,7 +460,7 @@ public class SHA256 extends DigestEngine {
      */
     private static void testSHA256()
     {
-        Digest dig = new SHA256();
+        DigestEngine dig = new SHA256();
         testKat(dig, "abc",
                 "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad");
         testKat(dig, "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
