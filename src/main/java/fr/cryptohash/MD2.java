@@ -120,7 +120,7 @@ public class MD2 extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		int pending = flush();
 		for (int i = 0; i < (16 - pending); i ++)

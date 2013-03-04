@@ -69,7 +69,7 @@ public interface Digest {
 	 *
 	 * @param inbuf   the data bytes
 	 */
-	public void update(byte[] inbuf);
+	public void update(byte... inbuf);
 
 	/**
 	 * Insert some more bytes.
@@ -78,7 +78,7 @@ public interface Digest {
      * @param len     the data length (in bytes)
      * @param inbuf   the data buffer
      */
-	public void update(int off, int len, byte[] inbuf);
+	public void update(int off, int len, byte... inbuf);
 
 	/**
 	 * Finalize the current hash computation and return the hash value
@@ -96,7 +96,7 @@ public interface Digest {
 	 * @param inbuf   the input data
 	 * @return  the hash output
 	 */
-	public byte[] digest(byte[] inbuf);
+	public byte[] digest(byte... inbuf);
 
 	/**
 	 * Finalize the current hash computation and store the hash value
@@ -113,7 +113,7 @@ public interface Digest {
      * @param outbuf   the output buffer
      * @return  the number of bytes actually written in {@code outbuf}
 	 */
-	public int digest(int off, int len, byte[] outbuf);
+	public int digest(int off, int len, byte... outbuf);
 
 	/**
 	 * Get the natural hash function output length (in bytes).

@@ -210,7 +210,7 @@ public class Luffa384 extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		int ptr = flush();
 		tmpBuf[ptr] = (byte)0x80;

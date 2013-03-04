@@ -76,7 +76,7 @@ abstract class SIMDBigCore extends DigestEngine {
 	abstract int[] getInitVal();
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		int ptr = flush();
 		byte[] buf = getBlockBuffer();

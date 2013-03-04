@@ -239,7 +239,7 @@ public class Luffa512 extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] out, int off)
+	protected void doPadding(int off, byte[] out)
 	{
 		int ptr = flush();
 		tmpBuf[ptr] = (byte)0x80;

@@ -103,7 +103,7 @@ abstract class WhirlpoolCore extends MDHelper {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		makeMDPadding();
 		encodeLELong(state0, output, outputOffset);

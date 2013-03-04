@@ -605,7 +605,7 @@ abstract class TigerCore extends MDHelper {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		makeMDPadding();
 		encodeLELong(currentA, output, outputOffset);

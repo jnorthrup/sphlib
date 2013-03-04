@@ -82,7 +82,7 @@ public class SHA0 extends MDHelper {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		makeMDPadding();
 		for (int i = 0; i < 5; i ++)

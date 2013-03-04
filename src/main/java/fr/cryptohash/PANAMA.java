@@ -118,7 +118,7 @@ public class PANAMA extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		int pending = flush();
 		update((byte)0x01);

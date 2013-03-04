@@ -255,7 +255,7 @@ abstract class BMWBigCore extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		byte[] buf = getBlockBuffer();
 		int ptr = flush();

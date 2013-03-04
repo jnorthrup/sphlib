@@ -108,7 +108,7 @@ abstract class SHA2BigCore extends MDHelper {
 	abstract long[] getInitVal();
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		makeMDPadding();
 		int olen = getDigestLength();

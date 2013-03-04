@@ -112,7 +112,7 @@ abstract class HAVALCore extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		int dataLen = flush();
 		long currentLength =

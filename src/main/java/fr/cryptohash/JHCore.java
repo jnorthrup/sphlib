@@ -397,7 +397,7 @@ abstract class JHCore extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] buf, int off)
+	protected void doPadding(int off, byte[] buf)
 	{
 		int rem = flush();
 		long bc = getBlockCount();

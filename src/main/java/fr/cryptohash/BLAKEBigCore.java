@@ -132,7 +132,7 @@ abstract class BLAKEBigCore extends DigestEngine {
 	abstract long[] getInitVal();
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] output, int outputOffset)
+	protected void doPadding(int outputOffset, byte[] output)
 	{
 		int ptr = flush();
 		int bitLen = ptr << 3;

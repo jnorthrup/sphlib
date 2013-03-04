@@ -67,10 +67,10 @@ public abstract class DigestEngine implements Digest {
 	 * and then {@link #update} with the appropriate padding
 	 * data in order to get the full input data.
 	 *
-	 * @param buf   the output buffer
-	 * @param off   the output offset
-	 */
-	protected abstract void doPadding(byte[] buf, int off);
+     * @param off   the output offset
+     * @param buf   the output buffer
+     */
+	protected abstract void doPadding(int off, byte[] buf);
 
 	/**
 	 * This function is called at object creation time; the
@@ -128,11 +128,11 @@ public abstract class DigestEngine implements Digest {
 	{
 		adjustDigestLen();
 		if (len >= digestLen) {
-			doPadding(buf, offset);
+			doPadding(offset, buf);
 			reset();
 			return digestLen;
 		} else {
-			doPadding(outputBuf, 0);
+			doPadding(0, outputBuf);
 			System.arraycopy(outputBuf, 0, buf, offset, len);
 			reset();
 			return len;

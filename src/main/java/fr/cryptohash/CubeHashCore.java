@@ -306,7 +306,7 @@ abstract class CubeHashCore extends DigestEngine {
 	}
 
 	/** @see DigestEngine */
-	protected void doPadding(byte[] out, int off)
+	protected void doPadding(int off, byte[] out)
 	{
 		int ptr = flush();
 		byte[] buf = getBlockBuffer();
