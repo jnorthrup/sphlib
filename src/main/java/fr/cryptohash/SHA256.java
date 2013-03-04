@@ -2,6 +2,8 @@
 
 package fr.cryptohash;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /**
  * <p>This class implements the SHA-256 digest algorithm under the
  * {@link Digest} API. SHA-256 is specified by FIPS 180-2.</p>
@@ -39,7 +41,12 @@ package fr.cryptohash;
 
 public class SHA256 extends SHA2Core {
 
-	/**
+    @Override
+    protected void processBlock(byte[] data) {
+        throw new NotImplementedException();
+    }
+
+    /**
 	 * Create the engine.
 	 */
 	public SHA256()

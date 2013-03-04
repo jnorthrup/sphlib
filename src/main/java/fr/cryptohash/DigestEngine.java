@@ -81,9 +81,12 @@ public abstract class DigestEngine implements Digest {
 	 */
 	protected abstract void doInit();
 
-	private int digestLen, blockLen, inputLen;
-	private byte[] inputBuf, outputBuf;
-	private long blockCount;
+	protected int digestLen;
+    protected int blockLen;
+    protected int inputLen;
+	protected byte[] inputBuf;
+    protected byte[] outputBuf;
+	protected long blockCount;
 
 	/**
 	 * Instantiate the engine.
@@ -99,7 +102,7 @@ public abstract class DigestEngine implements Digest {
 		blockCount = 0;
 	}
 
-	private void adjustDigestLen()
+	protected void adjustDigestLen()
 	{
 		if (digestLen == 0) {
 			digestLen = getDigestLength();

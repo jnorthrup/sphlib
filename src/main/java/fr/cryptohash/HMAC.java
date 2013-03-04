@@ -199,9 +199,9 @@ public class HMAC extends DigestEngine {
 		 * This is slightly ugly... we need to get the still
 		 * buffered data, but the only way to get it from
 		 * DigestEngine is to input some more bytes and wait
-		 * for the processBlock() call. We set a variable
+		 * for the processInbutBuf() call. We set a variable
 		 * with the count of actual data bytes, so that
-		 * processBlock() knows what to do.
+		 * processInbutBuf() knows what to do.
 		 */
 		onlyThis = flush();
 		if (onlyThis > 0)
