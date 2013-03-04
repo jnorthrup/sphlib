@@ -2,8 +2,6 @@
 
 package fr.cryptohash;
 
-import fr.cryptohash.Digest;
-
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -93,11 +91,11 @@ public class Speed {
 		"skein",      "Skein,256,512"
 	};
 
-	private static final Hashtable NAME_TO_CLASSNAMES = new Hashtable();
-	private static final Vector ORDERED_CLASSNAMES = new Vector();
+	private static final Hashtable<String, String> NAME_TO_CLASSNAMES = new Hashtable<String, String>();
+	private static final Vector<String> ORDERED_CLASSNAMES = new Vector<String>();
 
 	private static void addFun(String name, String cspec,
-		Vector sha3classes)
+		Vector<String> sha3classes)
 	{
 		int n = cspec.indexOf(',');
 		if (n < 0) {
@@ -134,7 +132,7 @@ public class Speed {
 		}
 	}
 
-	private static final Vector SHA3_CLASSES = new Vector();
+	private static final Vector<String> SHA3_CLASSES = new Vector<String>();
 
 	static {
 		for (int i = 0; i < FUNS.length; i += 2)
@@ -156,7 +154,7 @@ public class Speed {
 		"shavite3",   "shavite"
 	};
 
-	private static final Hashtable ALIASES = new Hashtable();
+	private static final Hashtable<String, String> ALIASES = new Hashtable<String, String>();
 	static {
 		for (int i = 0; i < FUNS_ALIAS.length; i += 2)
 			ALIASES.put(FUNS_ALIAS[i], FUNS_ALIAS[i + 1]);
@@ -173,10 +171,10 @@ public class Speed {
 	public static void main(String[] args)
 		throws Exception
 	{
-		Hashtable todo = new Hashtable();
+		Hashtable<String, String> todo = new Hashtable<String, String>();
 		for (int i = 0; i < args.length; i ++) {
 			String s = normalize(args[i]);
-			String t = (String)ALIASES.get(s);
+			String t = ALIASES.get(s);
 			if (t != null)
 				s = t;
 			if (s.equals("sha3")) {
@@ -184,7 +182,7 @@ public class Speed {
 				for (int j = 0; j < n; j ++)
 					todo.put(SHA3_CLASSES.elementAt(j), "");
 			} else {
-				String cns = (String)NAME_TO_CLASSNAMES.get(s);
+				String cns = NAME_TO_CLASSNAMES.get(s);
 				if (cns == null)
 					usage(args[i]);
 				int n = 0;
@@ -204,7 +202,7 @@ public class Speed {
 
 		int n = ORDERED_CLASSNAMES.size();
 		for (int i = 0; i < n; i ++) {
-			String cn = (String)ORDERED_CLASSNAMES.elementAt(i);
+			String cn = ORDERED_CLASSNAMES.elementAt(i);
 			if (!all && !todo.containsKey(cn))
 				continue;
 			Digest d = (Digest)Class.forName(
